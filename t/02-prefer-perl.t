@@ -6,6 +6,7 @@
 
 use strict;
 use warnings;
+no warnings 'once';
 
 use Test::More;
 use t::Util;
@@ -15,9 +16,9 @@ Test::More->builder->failure_output(*STDOUT) if $ENV{HARNESS_VERBOSE};
 
 plan tests => 3;
 
+$Data::GUID::Prefer_Perl = 1;
 require_ok( 'Data::GUID::Any' );
 
 can_ok( 'Data::GUID::Any', $_ ) for qw/ guid_as_string /;
 my $guid =  Data::GUID::Any::guid_as_string();
 ok( looks_like_guid( $guid  ), "looks like guid" ) or diag $guid;
-

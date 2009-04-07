@@ -1,0 +1,32 @@
+---
+name: Data-GUID-Any
+version: 0.001
+author:
+  - 'David Golden <dagolden@cpan.org>'
+abstract: Generic interface for GUID creation
+license: apache
+resources:
+  bugtracker: http://rt.cpan.org/NoAuth/Bugs.html?Dist=Data-GUID-Any
+  repository: http://github.com/dagolden/data-guid-any/
+requires:
+  Exporter: 0
+  File::Spec: 3.12
+  base: 0
+  perl: 5.006
+build_requires:
+  File::Find: 0
+  Test::More: 0.62
+provides:
+  Data::GUID::Any:
+    file: lib/Data/GUID/Any.pm
+    version: 0.001
+generated_by: Module::Build version 0.32
+meta-spec:
+  url: http://module-build.sourceforge.net/META-spec-v1.2.html
+  version: 1.2
+no_index:
+  directory:
+    - examples
+    - inc
+    - t
+    - xt
