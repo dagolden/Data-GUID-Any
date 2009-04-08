@@ -12,11 +12,67 @@ This documentation describes version 0.001.
 
 =head1 SYNOPSIS
 
-     use Data::GUID::Any;
+     use Data::GUID::Any 'guid_as_string';
+ 
+     my $guid = guid_as_string();
 
 =head1 DESCRIPTION
 
+This module is a generic wrapper around various ways of obtaining 
+Globally Unique ID's (GUID's).  It will use any of the following, listed
+from most preferred to least preferred:
+
+=over
+
+=item *
+
+L<Data::GUID>
+
+=item *
+
+L<Data::UUID>
+
+=item *
+
+L<Data::UUID::LibUUID>
+
+=item *
+
+L<UUID>
+
+=item *
+
+L<Win32> (using GuidGen())
+
+=item *
+
+L<APR::UUID> (random)
+
+=item *
+
+L<UUID::Random> (random)
+
+=item *
+
+uuid (external program)
+
+=back
+
+If none are available when Data::GUID::Any is installed, it will 
+add Data::GUID as a prerequisite.
+
 =head1 USAGE
+
+=head2 guid_as_string()
+
+     my $guid = guid_as_string();
+
+Returns a guid in string format with upper-case hex characters:  
+
+   FA2D5B34-23DB-11DE-B548-0018F34EC37C
+
+Except for modules that only produce random GUID's, these are 'version 1'
+GUID's.
 
 =head1 BUGS
 
@@ -27,6 +83,14 @@ When submitting a bug or request, please include a test-file or a patch to an
 existing test-file that illustrates the bug or desired feature.
 
 =head1 SEE ALSO
+
+=over
+
+=item *
+
+RFC 4122 L<http://tools.ietf.org/html/rfc4122>
+
+=back
 
 =head1 AUTHOR
 

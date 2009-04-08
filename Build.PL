@@ -23,7 +23,6 @@ my $build = $class->new(
   dist_author => 'David Golden <dagolden@cpan.org>',
   license => 'apache',
   create_readme => 1,
-  create_makefile_pl  => 'traditional',
   requires => {
     'perl' => 5.006,
     'base' => 0, 
@@ -36,6 +35,9 @@ my $build = $class->new(
     'Test::More' => 0.62, 
   },
   meta_add            => { 
+    configure_requires => { 
+      'Module::Build' => 0.30 
+    },
     no_index => { 
       directory => [ qw/ examples inc t xt /],
     },

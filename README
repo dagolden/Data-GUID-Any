@@ -5,10 +5,45 @@ VERSION
     This documentation describes version 0.001.
 
 SYNOPSIS
-         use Data::GUID::Any;
+         use Data::GUID::Any 'guid_as_string';
+     
+     my $guid = guid_as_string();
 
 DESCRIPTION
+    This module is a generic wrapper around various ways of obtaining
+    Globally Unique ID's (GUID's). It will use any of the following, listed
+    from most preferred to least preferred:
+
+    *   Data::GUID
+
+    *   Data::UUID
+
+    *   Data::UUID::LibUUID
+
+    *   UUID
+
+    *   Win32 (using GuidGen())
+
+    *   APR::UUID (random)
+
+    *   UUID::Random (random)
+
+    *   uuid (external program)
+
+    If none are available when Data::GUID::Any is installed, it will add
+    Data::GUID as a prerequisite.
+
 USAGE
+  guid_as_string()
+         my $guid = guid_as_string();
+
+    Returns a guid in string format with upper-case hex characters:
+
+       FA2D5B34-23DB-11DE-B548-0018F34EC37C
+
+    Except for modules that only produce random GUID's, these are 'version
+    1' GUID's.
+
 BUGS
     Please report any bugs or feature requests using the CPAN Request
     Tracker web interface at
@@ -18,6 +53,8 @@ BUGS
     to an existing test-file that illustrates the bug or desired feature.
 
 SEE ALSO
+    *   RFC 4122 <http://tools.ietf.org/html/rfc4122>
+
 AUTHOR
     David A. Golden (DAGOLDEN)
 

@@ -50,12 +50,26 @@ sub _check_binaries {
 
 #--------------------------------------------------------------------------#
 
-sub _preferred_modules { return qw/Data::GUID Data::UUID Win32/ }
+sub _preferred_modules { 
+  return qw(
+    Data::GUID 
+    Data::UUID 
+    Data::UUID::LibUUID
+    UUID
+    Win32 
+    APR::UUID
+    UUID::Random
+  );
+}
 
 my %modules = (
   'Data::GUID' => sub { return Data::GUID->new->as_string },
   'Data::UUID' => sub { return Data::UUID->new->create_str },
+  'Data::UUID::LibUUID' => sub{ return uc Data::UUID::LibUUID::new_uuid_string() },
+  'UUID' => sub { my ($u,$s); UUID::generate($u); UUID::unparse($u, $s); return uc $s },
   'Win32' => sub { my $guid = Win32::GuidGen(); return substr($guid,1,-1) },
+  'APR::UUID' => sub { return uc APR::UUID->new->format },
+  'UUID::Random' => sub { return uc UUID::Random::generate() },
 );
 
 sub _check_modules {
@@ -107,7 +121,21 @@ This documentation describes version %%VERSION%%.
 
 = DESCRIPTION
 
-This module is a generic wrapper
+This module is a generic wrapper around various ways of obtaining 
+Globally Unique ID's (GUID's).  It will use any of the following, listed
+from most preferred to least preferred:
+
+* [Data::GUID]
+* [Data::UUID]
+* [Data::UUID::LibUUID]
+* [UUID]
+* [Win32] (using GuidGen())
+* [APR::UUID] (random)
+* [UUID::Random] (random)
+* uuid (external program)
+
+If none are available when Data::GUID::Any is installed, it will 
+add Data::GUID as a prerequisite.
 
 = USAGE
 
@@ -115,11 +143,12 @@ This module is a generic wrapper
 
     my $guid = guid_as_string();
 
-Returns a guid in string format (upper-case hex characters):
+Returns a guid in string format with upper-case hex characters:  
 
   FA2D5B34-23DB-11DE-B548-0018F34EC37C
 
-
+Except for modules that only produce random GUID's, these are 'version 1'
+GUID's.
 
 = BUGS
 
@@ -131,6 +160,7 @@ existing test-file that illustrates the bug or desired feature.
 
 = SEE ALSO
 
+* RFC 4122 [http://tools.ietf.org/html/rfc4122]
 
 = AUTHOR
 

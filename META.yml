@@ -30,3 +30,5 @@ no_index:
     - inc
     - t
     - xt
+configure_requires:
+  Module::Build: 0.3
