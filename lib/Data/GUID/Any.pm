@@ -17,13 +17,15 @@ $VERSION = eval $VERSION; ## no critic
 
 our @EXPORT_OK = qw/ guid_as_string /;
 
+our $Using;
+
 #--------------------------------------------------------------------------#
 
-my $hex = "a-z0-9";
+my $hex = "A-Z0-9";
 
 sub _looks_like_guid {
   my $guid = shift;
-  return $guid =~ /[$hex]{8}-[$hex]{4}-[$hex]{4}-[$hex]{4}-[$hex]{12}/i;
+  return $guid =~ /[$hex]{8}-[$hex]{4}-[$hex]{4}-[$hex]{4}-[$hex]{12}/;
 }
 
 #--------------------------------------------------------------------------#
@@ -41,8 +43,8 @@ sub _check_binaries {
     my ($path) =  grep { -x }
                 map { File::Spec->catfile( $_, $cmd ) } File::Spec->path;
     next unless $path;
-    my $sub = sub { chomp( my $guid = qx/$path $args/ ); return $guid };
-    return $sub if _looks_like_guid( $sub->() );
+    my $sub = sub { chomp( my $guid = qx/$path $args/ ); return uc $guid };
+    return ($bin, $sub) if _looks_like_guid( $sub->() );
   }
 }
 
@@ -58,20 +60,29 @@ my %modules = (
 
 sub _check_modules {
   for my $mod ( _preferred_modules() ) {
-    return $modules{$mod} if eval "require $mod; 1";
+    next unless eval "require $mod; 1";
+    my $sub = $modules{$mod};
+    return ($mod, $sub) if _looks_like_guid( $sub->() );
   }
 }
 
 #--------------------------------------------------------------------------#
 
-my $from_bin = _check_binaries();
-my $from_mod = _check_modules();
+my ($which_bin, $bin_sub) = _check_binaries();
+my ($which_mod, $mod_sub) = _check_modules();
 
-die "Couldn't find a GUID module or binary" unless $from_bin || $from_mod;
+die "Couldn't find a GUID module or binary" unless $bin_sub || $mod_sub;
 
 {
   no warnings;
-  *guid_as_string = $from_mod || $from_bin;
+  if ( $mod_sub ) {
+    *guid_as_string = $mod_sub;
+    $Using = $which_mod
+  }
+  else {
+    *guid_as_string = $bin_sub;
+    $Using = $which_bin
+  }
 }
 
 1;
@@ -90,12 +101,24 @@ This documentation describes version %%VERSION%%.
 
 = SYNOPSIS
 
-    use Data::GUID::Any;
+    use Data::GUID::Any 'guid_as_string';
+
+    my $guid = guid_as_string();
 
 = DESCRIPTION
 
+This module is a generic wrapper
 
 = USAGE
+
+== guid_as_string()
+
+    my $guid = guid_as_string();
+
+Returns a guid in string format (upper-case hex characters):
+
+  FA2D5B34-23DB-11DE-B548-0018F34EC37C
+
 
 
 = BUGS

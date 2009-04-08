@@ -24,6 +24,18 @@ my $binary = File::Spec->catfile(qw/t bin uuid/);
 $binary .= ".bat" if $^O eq 'MSWin32';
 
 #--------------------------------------------------------------------------#
+# hide some modules
+#--------------------------------------------------------------------------#
+
+my %hidden;
+sub _hider {
+  my ($self, $file) = @_;
+  die "Can't locate '$file' (hidden)" if $hidden{$file};
+};
+
+unshift @INC, \&_hider;
+
+#--------------------------------------------------------------------------#
 # Start tests
 #--------------------------------------------------------------------------#
 
@@ -46,10 +58,14 @@ while ( my $mod = shift @modules ) {
     delete $INC{'Data/GUID/Any.pm'};
     {
       local $SIG{__WARN__} = sub {};
-      ok( eval { require Data::GUID::Any;1 },
-        "reloaded Data::GUID::Any (using $mod)"
+      eval { require Data::GUID::Any;1 };
+      is( $@ , "",
+        "reloaded Data::GUID::Any"
       );
     }
+    is( $Data::GUID::Any::Using, ($mod eq $binary ? 'uuid' : $mod), 
+      "Data::GUID::Any set to use '$mod'" 
+    );
     # test getting a guid
     can_ok( 'Data::GUID::Any', $_ ) for qw/ guid_as_string /;
     my $guid =  Data::GUID::Any::guid_as_string();
@@ -61,10 +77,11 @@ while ( my $mod = shift @modules ) {
       my $mod_path = $mod;
       $mod_path =~ s{::}{/}g;
       $mod_path .= ".pm";
-      $INC{$mod_path} = undef;
+      $hidden{$mod_path} = delete $INC{$mod_path};
       eval "require $mod; 1";
-      is( $@, "", "$mod hidden" ) 
+      ok( $@, "$mod hidden" ) 
         or diag "$mod_path";
+      undef $Data::GUID::Any::Using;
     }
   }
 }
