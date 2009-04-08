@@ -17,7 +17,14 @@ $VERSION = eval $VERSION; ## no critic
 
 our @EXPORT_OK = qw/ guid_as_string /;
 
-our $Prefer_Perl;
+#--------------------------------------------------------------------------#
+
+my $hex = "a-z0-9";
+
+sub _looks_like_guid {
+  my $guid = shift;
+  return $guid =~ /[$hex]{8}-[$hex]{4}-[$hex]{4}-[$hex]{4}-[$hex]{12}/i;
+}
 
 #--------------------------------------------------------------------------#
 
@@ -34,21 +41,23 @@ sub _check_binaries {
     my ($path) =  grep { -x }
                 map { File::Spec->catfile( $_, $cmd ) } File::Spec->path;
     next unless $path;
-    my $output = qx/$path/;
-    return sub { chomp( my $guid = qx/$cmd $args/); return $guid } if $? == 0;
+    my $sub = sub { chomp( my $guid = qx/$path $args/ ); return $guid };
+    return $sub if _looks_like_guid( $sub->() );
   }
 }
 
 #--------------------------------------------------------------------------#
 
-our @module_order = qw/Data::GUID Win32/;
+sub _preferred_modules { return qw/Data::GUID Data::UUID Win32/ }
+
 my %modules = (
-  'Data::GUID' => sub { return Data::Guid->new->as_string },
+  'Data::GUID' => sub { return Data::GUID->new->as_string },
+  'Data::UUID' => sub { return Data::UUID->new->create_str },
   'Win32' => sub { my $guid = Win32::GuidGen(); return substr($guid,1,-1) },
 );
 
 sub _check_modules {
-  for my $mod ( keys %modules ) {
+  for my $mod ( _preferred_modules() ) {
     return $modules{$mod} if eval "require $mod; 1";
   }
 }
@@ -58,15 +67,12 @@ sub _check_modules {
 my $from_bin = _check_binaries();
 my $from_mod = _check_modules();
 
-die "Couldn't find a GUID method" unless $from_bin || $from_mod;
+die "Couldn't find a GUID module or binary" unless $from_bin || $from_mod;
 
 {
   no warnings;
-  *guid_as_string = $Prefer_Perl  ? ( $from_mod || $from_bin ) 
-                                  : ( $from_bin || $from_mod );
+  *guid_as_string = $from_mod || $from_bin;
 }
-
-
 
 1;
 
