@@ -38,11 +38,19 @@ my %binaries = (
 );
 
 sub _check_binaries {
+  BIN:
   for my $bin ( keys %binaries ) {
     my ($cmd, $args) = @{$binaries{$bin}}{qw/cmd args/};
-    my ($path) =  grep { -x }
-                map { File::Spec->catfile( $_, $cmd ) } File::Spec->path;
-    next unless $path;
+    my $path;
+    my @suffixes = $^O eq 'MSWin32' ? (qw/.exe .com .bat/) : ( '' );
+    SUFFIX:
+    for my $suffix ( @suffixes ) {
+      ($path) = grep { -x }
+                map { File::Spec->catfile( $_, $cmd ) . $suffix }
+                File::Spec->path;
+      next SUFFIX unless $path;
+    }
+    next BIN unless $path;
     my $sub = sub { chomp( my $guid = qx/$path $args/ ); return uc $guid };
     return ($bin, $sub) if _looks_like_guid( $sub->() );
   }
