@@ -30,17 +30,14 @@ sub _looks_like_guid {
 
 #--------------------------------------------------------------------------#
 
-my %binaries = (
-  uuid => {
-    cmd => 'uuid',
-    args => '-v1',
-  },
+my @binaries = (
+  [ uuid => 'uuid' => '-v1'],
 );
 
 sub _check_binaries {
   BIN:
-  for my $bin ( keys %binaries ) {
-    my ($cmd, $args) = @{$binaries{$bin}}{qw/cmd args/};
+  for my $bin ( @binaries ) {
+    my ($name, $cmd, $args) = @$bin;
     my $path;
     my @suffixes = $^O eq 'MSWin32' ? (qw/.exe .com .bat/) : ( '' );
     SUFFIX:
@@ -52,38 +49,31 @@ sub _check_binaries {
     }
     next BIN unless $path;
     my $sub = sub { chomp( my $guid = qx/$path $args/ ); return uc $guid };
-    return ($bin, $sub) if _looks_like_guid( $sub->() );
+    return ($name, $sub) if _looks_like_guid( $sub->() );
   }
 }
 
 #--------------------------------------------------------------------------#
 
-sub _preferred_modules { 
-  return qw(
-    Data::GUID 
-    Data::UUID 
-    Data::UUID::LibUUID
-    UUID
-    Win32 
-    APR::UUID
-    UUID::Random
-  );
-}
-
-my %modules = (
-  'Data::GUID' => sub { return Data::GUID->new->as_string },
-  'Data::UUID' => sub { return Data::UUID->new->create_str },
-  'Data::UUID::LibUUID' => sub{ return uc Data::UUID::LibUUID::new_uuid_string() },
-  'UUID' => sub { my ($u,$s); UUID::generate($u); UUID::unparse($u, $s); return uc $s },
-  'Win32' => sub { my $guid = Win32::GuidGen(); return substr($guid,1,-1) },
-  'APR::UUID' => sub { return uc APR::UUID->new->format },
-  'UUID::Random' => sub { return uc UUID::Random::generate() },
+my @modules = (
+  ['Data::GUID' => sub { return Data::GUID->new->as_string }],
+  ['Data::UUID' => sub { return Data::UUID->new->create_str }],
+  ['Data::UUID::LibUUID' => sub{ return uc Data::UUID::LibUUID::new_uuid_string() }],
+  ['UUID' => sub { my ($u,$s); UUID::generate($u); UUID::unparse($u, $s); return uc $s }],
+  ['Win32' => sub { my $guid = Win32::GuidGen(); return substr($guid,1,-1) }],
+  ['UUID::Generator::PurePerl' => sub { return uc UUID::Generator::PurePerl->new->generate_v1->as_string }],
+  ['APR::UUID' => sub { return uc APR::UUID->new->format }],
+  ['UUID::Random' => sub { return uc UUID::Random::generate() }],
 );
 
+sub _preferred_modules { 
+  return map { $_->[0] } @modules;
+}
+
 sub _check_modules {
-  for my $mod ( _preferred_modules() ) {
+  for my $option ( @modules ) {
+    my ($mod,$sub) = @$option;
     next unless eval "require $mod; 1";
-    my $sub = $modules{$mod};
     return ($mod, $sub) if _looks_like_guid( $sub->() );
   }
 }
@@ -138,6 +128,7 @@ from most preferred to least preferred:
 * [Data::UUID::LibUUID]
 * [UUID]
 * [Win32] (using GuidGen())
+* [UUID::Generator::PurePerl]
 * [APR::UUID] (random)
 * [UUID::Random] (random)
 * uuid (external program)
