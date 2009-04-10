@@ -12,7 +12,7 @@ use Config;
 use File::Spec;
 use base 'Exporter';
 
-our $VERSION = '0.001';
+our $VERSION = '0.002';
 $VERSION = eval $VERSION; ## no critic
 
 our @EXPORT_OK = qw/ guid_as_string /;

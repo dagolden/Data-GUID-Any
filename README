@@ -2,7 +2,7 @@ NAME
     Data::GUID::Any - Generic interface for GUID creation
 
 VERSION
-    This documentation describes version 0.001.
+    This documentation describes version 0.002.
 
 SYNOPSIS
          use Data::GUID::Any 'guid_as_string';

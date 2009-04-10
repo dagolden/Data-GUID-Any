@@ -1,6 +1,6 @@
 ---
 name: Data-GUID-Any
-version: 0.001
+version: 0.002
 author:
   - 'David Golden <dagolden@cpan.org>'
 abstract: Generic interface for GUID creation
@@ -19,7 +19,7 @@ build_requires:
 provides:
   Data::GUID::Any:
     file: lib/Data/GUID/Any.pm
-    version: 0.001
+    version: 0.002
 generated_by: Module::Build version 0.32
 meta-spec:
   url: http://module-build.sourceforge.net/META-spec-v1.2.html
