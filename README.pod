@@ -84,7 +84,8 @@ L<UUID::Tiny> (v1)
 =back
 
 At least one of them is guaranteed to exist or Data::GUID::Any will
-throw an exception when loaded.
+throw an exception when loaded. This shouldn't happen if prerequisites
+were correctly installed.
 
 =head2 v1_guid_as_string()
 
@@ -121,8 +122,8 @@ L<UUID::Tiny>
 
 =back
 
-If none of them are available, an exception will be thrown when this
-is called.
+If none of them are available, an exception will be thrown when this is called.
+This shouldn't happen if prerequisites were correctly installed.
 
 =head2 v4_guid_as_string()
 
@@ -151,8 +152,8 @@ L<UUID::Tiny>
 
 =back
 
-If none of them are available, an exception will be thrown when this
-is called.
+If none of them are available, an exception will be thrown when this is called.
+This shouldn't happen if prerequisites were correctly installed.
 
 =head1 SEE ALSO
 

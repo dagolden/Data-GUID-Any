@@ -211,7 +211,8 @@ preferred:
 * L<UUID::Tiny> (v1)
 
 At least one of them is guaranteed to exist or Data::GUID::Any will
-throw an exception when loaded.
+throw an exception when loaded. This shouldn't happen if prerequisites
+were correctly installed.
 
 =head2 v1_guid_as_string()
 
@@ -228,8 +229,9 @@ with upper-case hex characters from one of the following sources:
 * uuid (external program)
 * L<UUID::Tiny>
 
-If none of them are available, an exception will be thrown when this
-is called.
+If none of them are available, an exception will be thrown when this is called.
+This shouldn't happen if prerequisites were correctly installed.
+
 
 =head2 v4_guid_as_string()
 
@@ -244,8 +246,8 @@ characters from one of the following modules:
 * uuid (external program)
 * L<UUID::Tiny>
 
-If none of them are available, an exception will be thrown when this
-is called.
+If none of them are available, an exception will be thrown when this is called.
+This shouldn't happen if prerequisites were correctly installed.
 
 =head1 SEE ALSO
 
