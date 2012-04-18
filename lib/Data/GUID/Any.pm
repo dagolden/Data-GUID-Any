@@ -52,7 +52,7 @@ sub _check_binaries {
 my @modules = (
   ['Data::GUID' => sub { return Data::GUID->new->as_string }],
   ['Data::UUID' => sub { return Data::UUID->new->create_str }],
-  ['Data::UUID::LibUUID' => sub{ return uc Data::UUID::LibUUID::new_uuid_string() }],
+  ['Data::UUID::LibUUID' => sub{ return uc Data::UUID::LibUUID::new_uuid_string(2) }],
   ['UUID' => sub { my ($u,$s); UUID::generate($u); UUID::unparse($u, $s); return uc $s }],
   ['Win32' => sub { my $guid = Win32::GuidGen(); return substr($guid,1,-1) }],
   ['UUID::Generator::PurePerl' => sub { return uc UUID::Generator::PurePerl->new->generate_v1->as_string }],
