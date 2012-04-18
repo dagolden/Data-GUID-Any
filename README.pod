@@ -2,7 +2,7 @@
 
 =head1 NAME
 
-Data::GUID::Any - Generic interface for GUID creation
+Data::GUID::Any - Generic interface for GUID/UUID creation
 
 =head1 VERSION
 
@@ -16,11 +16,88 @@ version 0.003
 
 =head1 DESCRIPTION
 
-This module is a generic wrapper around various ways of obtaining
-Globally Unique ID's (GUID's).  It will use any of the following, listed
-from most preferred to least preferred:
+This module is a generic wrapper around various ways of obtaining Globally
+Unique ID's (GUID's), also known as Universally Unique Identifiers (UUID's).
+
+On installation, if Data::GUID::Any can't detect a way of generating both
+version 1 and version 4 GUID's, it will add either Data::UUID::MT or UUID::Tiny
+as a prerequisite, depending on whether or not a compiler is available.
+
+=head1 USAGE
+
+The following functions are available for export.
+
+=head2 guid_as_string()
+
+    my $guid = guid_as_string();
+
+Returns a guid in string format with upper-case hex characters:
+
+  FA2D5B34-23DB-11DE-B548-0018F34EC37C
+
+This is the most general subroutine that offers the least amount of control
+over the result.  This routine returns whatever is the default type of GUID for
+a source, which could be version 1 or version 4 (or, in the case of Win32,
+something resembling a version 1, but specific to Microsoft).
+
+It will use any of the following sources, listed from most preferred to least
+preferred:
 
 =over 4
+
+=item *
+
+L<Data::UUID::MT> (v4)
+
+=item *
+
+L<Data::GUID> (v1)
+
+=item *
+
+L<Data::UUID> (v1)
+
+=item *
+
+L<Data::UUID::LibUUID> (v4 or v1)
+
+=item *
+
+L<UUID> (v4 or v1)
+
+=item *
+
+L<Win32> (using GuidGen()) (similar to v1)
+
+=item *
+
+uuid (external program) (v1)
+
+=item *
+
+L<APR::UUID> (v4 or v1)
+
+=item *
+
+L<UUID::Tiny> (v1)
+
+=back
+
+At least one of them is guaranteed to exist or Data::GUID::Any will
+throw an exception when loaded.
+
+=head2 v1_guid_as_string()
+
+    my $guid = v1_guid_as_string();
+
+Returns a version 1 (timestamp+MAC/random-identifier) GUID in string format
+with upper-case hex characters from one of the following sources:
+
+=over 4
+
+=item *
+
+L<Data::UUID::MT>
 
 =item *
 
@@ -36,45 +113,46 @@ L<Data::UUID::LibUUID>
 
 =item *
 
-L<UUID>
+uuid (external program)
 
 =item *
 
-L<Win32> (using GuidGen())
+L<UUID::Tiny>
+
+=back
+
+If none of them are available, an exception will be thrown when this
+is called.
+
+=head2 v4_guid_as_string()
+
+    my $guid = v4_guid_as_string();
+
+Returns a version 4 (random) GUID in string format with upper-case hex
+characters from one of the following modules:
+
+=over 4
 
 =item *
 
-L<UUID::Generator::PurePerl>
+L<Data::UUID::MT>
 
 =item *
 
-L<APR::UUID> (random)
-
-=item *
-
-L<UUID::Random> (random)
+L<Data::UUID::LibUUID>
 
 =item *
 
 uuid (external program)
 
+=item *
+
+L<UUID::Tiny>
+
 =back
 
-If none are available when Data::GUID::Any is installed, it will
-add Data::GUID as a prerequisite.
-
-=head1 USAGE
-
-=head2 guid_as_string()
-
-    my $guid = guid_as_string();
-
-Returns a guid in string format with upper-case hex characters:
-
-  FA2D5B34-23DB-11DE-B548-0018F34EC37C
-
-Except for modules that only produce random GUID's, these are 'version 1'
-GUID's.
+If none of them are available, an exception will be thrown when this
+is called.
 
 =head1 SEE ALSO
 
