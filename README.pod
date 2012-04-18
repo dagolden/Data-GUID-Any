@@ -1,0 +1,119 @@
+=pod
+
+=head1 NAME
+
+Data::GUID::Any - Generic interface for GUID creation
+
+=head1 VERSION
+
+version 0.003
+
+=head1 SYNOPSIS
+
+    use Data::GUID::Any 'guid_as_string';
+
+    my $guid = guid_as_string();
+
+=head1 DESCRIPTION
+
+This module is a generic wrapper around various ways of obtaining
+Globally Unique ID's (GUID's).  It will use any of the following, listed
+from most preferred to least preferred:
+
+=over 4
+
+=item *
+
+L<Data::GUID>
+
+=item *
+
+L<Data::UUID>
+
+=item *
+
+L<Data::UUID::LibUUID>
+
+=item *
+
+L<UUID>
+
+=item *
+
+L<Win32> (using GuidGen())
+
+=item *
+
+L<UUID::Generator::PurePerl>
+
+=item *
+
+L<APR::UUID> (random)
+
+=item *
+
+L<UUID::Random> (random)
+
+=item *
+
+uuid (external program)
+
+=back
+
+If none are available when Data::GUID::Any is installed, it will
+add Data::GUID as a prerequisite.
+
+=head1 USAGE
+
+=head2 guid_as_string()
+
+    my $guid = guid_as_string();
+
+Returns a guid in string format with upper-case hex characters:
+
+  FA2D5B34-23DB-11DE-B548-0018F34EC37C
+
+Except for modules that only produce random GUID's, these are 'version 1'
+GUID's.
+
+=head1 SEE ALSO
+
+=over 4
+
+=item *
+
+RFC 4122 [http://tools.ietf.org/html/rfc4122]
+
+=back
+
+=for :stopwords cpan testmatrix url annocpan anno bugtracker rt cpants kwalitee diff irc mailto metadata placeholders metacpan
+
+=head1 SUPPORT
+
+=head2 Bugs / Feature Requests
+
+Please report any bugs or feature requests through the issue tracker
+at L<http://rt.cpan.org/Public/Dist/Display.html?Name=Data-GUID-Any>.
+You will be notified automatically of any progress on your issue.
+
+=head2 Source Code
+
+This is open source software.  The code repository is available for
+public review and contribution under the terms of the license.
+
+L<https://github.com/dagolden/data-guid-any>
+
+  git clone https://github.com/dagolden/data-guid-any.git
+
+=head1 AUTHOR
+
+David Golden <dagolden@cpan.org>
+
+=head1 COPYRIGHT AND LICENSE
+
+This software is Copyright (c) 2012 by David Golden.
+
+This is free software, licensed under:
+
+  The Apache License, Version 2.0, January 2004
+

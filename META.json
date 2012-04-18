@@ -1,0 +1,73 @@
+{
+   "abstract" : "Generic interface for GUID creation",
+   "author" : [
+      "David Golden <dagolden@cpan.org>"
+   ],
+   "dynamic_config" : 0,
+   "generated_by" : "Dist::Zilla version 4.300009, CPAN::Meta::Converter version 2.120630",
+   "license" : [
+      "apache_2_0"
+   ],
+   "meta-spec" : {
+      "url" : "http://search.cpan.org/perldoc?CPAN::Meta::Spec",
+      "version" : "2"
+   },
+   "name" : "Data-GUID-Any",
+   "no_index" : {
+      "directory" : [
+         "t",
+         "xt",
+         "examples",
+         "corpus"
+      ],
+      "package" : [
+         "DB"
+      ]
+   },
+   "prereqs" : {
+      "configure" : {
+         "requires" : {
+            "ExtUtils::MakeMaker" : "6.30"
+         }
+      },
+      "runtime" : {
+         "requires" : {
+            "Config" : "0",
+            "Exporter" : "0",
+            "File::Spec" : "0",
+            "base" : "0",
+            "perl" : "5.008",
+            "strict" : "0",
+            "warnings" : "0"
+         }
+      },
+      "test" : {
+         "requires" : {
+            "File::Find" : "0",
+            "File::Temp" : "0",
+            "Test::More" : "0"
+         }
+      }
+   },
+   "provides" : {
+      "Data::GUID::Any" : {
+         "file" : "lib/Data/GUID/Any.pm",
+         "version" : "0.003"
+      }
+   },
+   "release_status" : "stable",
+   "resources" : {
+      "bugtracker" : {
+         "mailto" : "bug-data-guid-any at rt.cpan.org",
+         "web" : "http://rt.cpan.org/Public/Dist/Display.html?Name=Data-GUID-Any"
+      },
+      "homepage" : "https://github.com/dagolden/data-guid-any",
+      "repository" : {
+         "type" : "git",
+         "url" : "https://github.com/dagolden/data-guid-any.git",
+         "web" : "https://github.com/dagolden/data-guid-any"
+      }
+   },
+   "version" : "0.003"
+}
+
