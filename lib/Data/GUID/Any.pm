@@ -11,7 +11,7 @@ use base 'Exporter';
 
 our @EXPORT_OK = qw/ guid_as_string /;
 
-our $Using;
+our $Using = "";
 
 #--------------------------------------------------------------------------#
 
@@ -49,12 +49,15 @@ sub _check_binaries {
 
 #--------------------------------------------------------------------------#
 
+my $dumt;
 my @modules = (
-  ['Data::GUID' => sub { return Data::GUID->new->as_string }],
-  ['Data::UUID' => sub { return Data::UUID->new->create_str }],
+  ['Data::GUID' => sub { return uc Data::GUID->new->as_string }],
+  ['Data::UUID' => sub { return uc Data::UUID->new->create_str }],
   ['Data::UUID::LibUUID' => sub{ return uc Data::UUID::LibUUID::new_uuid_string(2) }],
+  ['Data::UUID::MT' => sub { $dumt ||= Data::UUID::MT->new(version => 1); return uc $dumt->create_string; }],
   ['UUID' => sub { my ($u,$s); UUID::generate($u); UUID::unparse($u, $s); return uc $s }],
-  ['Win32' => sub { my $guid = Win32::GuidGen(); return substr($guid,1,-1) }],
+  ['Win32' => sub { my $guid = Win32::GuidGen(); return uc substr($guid,1,-1) }],
+  ['UUID::Tiny' => sub { return uc UUID::Tiny::create_UUID_as_string(UUID::Tiny::UUID_V1()) }],
   ['UUID::Generator::PurePerl' => sub { return uc UUID::Generator::PurePerl->new->generate_v1->as_string }],
   ['APR::UUID' => sub { return uc APR::UUID->new->format }],
   ['UUID::Random' => sub { return uc UUID::Random::generate() }],
@@ -111,6 +114,7 @@ from most preferred to least preferred:
 * L<Data::GUID>
 * L<Data::UUID>
 * L<Data::UUID::LibUUID>
+* L<Data::UUID::MT>
 * L<UUID>
 * L<Win32> (using GuidGen())
 * L<UUID::Generator::PurePerl>
