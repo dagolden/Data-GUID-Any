@@ -92,7 +92,7 @@ sub _is_available {
     return $NO_BINARY ? undef : IPC::Cmd::can_run($name);
   }
   else {
-    return eval "require $name; \$name";
+    return eval "require $name";
   }
 }
 
