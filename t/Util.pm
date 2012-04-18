@@ -1,7 +1,8 @@
 package t::Util;
 use strict;
 use warnings;
-use base 'Exporter';
+use Exporter;
+our @ISA = qw/Exporter/;
 our @EXPORT = qw/looks_like_guid/;
 
 my $hex = "A-Z0-9";

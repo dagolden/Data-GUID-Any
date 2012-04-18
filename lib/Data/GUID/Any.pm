@@ -5,11 +5,9 @@ package Data::GUID::Any;
 # ABSTRACT: Generic interface for GUID/UUID creation
 # VERSION
 
-use Config;
-use File::Spec;
 use IPC::Cmd;
-use base 'Exporter';
-
+use Exporter;
+our @ISA = qw/Exporter/;
 our @EXPORT_OK = qw/ guid_as_string v1_guid_as_string v4_guid_as_string/;
 
 our ($Using_vX, $Using_v1, $Using_v4) = ("") x 3;
