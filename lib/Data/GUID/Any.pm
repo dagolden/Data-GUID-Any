@@ -2,7 +2,7 @@ use 5.006;
 use strict;
 use warnings;
 package Data::GUID::Any;
-# ABSTRACT Generic interface for GUID creation
+# ABSTRACT: Generic interface for GUID creation
 # VERSION
 
 use Config;
