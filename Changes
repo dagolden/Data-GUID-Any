@@ -1,6 +1,8 @@
 Revision history for Data-GUID-Any
 
 {{$NEXT}}
+
+0.003     2012-04-18 12:59:58 America/New_York
     
     - The ordering of GUID providers  has changed and there are now
       separate functions for generic GUID (any supported type), v1 and v4
