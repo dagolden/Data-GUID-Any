@@ -1,7 +1,7 @@
 use strict;
 use warnings;
 
-use Test::More;
+use Test::More 0.92;
 use Config;
 use File::Spec;
 use t::Util;
@@ -32,8 +32,6 @@ unshift @INC, \&_hider;
 #--------------------------------------------------------------------------#
 # Start tests
 #--------------------------------------------------------------------------#
-
-plan 'no_plan';
 
 require_ok( "Data::GUID::Any" )
   or BAIL_OUT "require Data::GUID::Any failed";
@@ -80,4 +78,4 @@ while ( my $mod = shift @modules ) {
   }
 }
 
-
+done_testing;
