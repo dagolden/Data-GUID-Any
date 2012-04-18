@@ -1,5 +1,6 @@
 use strict;
 use warnings;
+no warnings 'once';
 
 use Test::More 0.92;
 use Config;
@@ -33,47 +34,65 @@ unshift @INC, \&_hider;
 # Start tests
 #--------------------------------------------------------------------------#
 
+my %fcn = (
+  any => sub { Data::GUID::Any::guid_as_string() },
+  v1  => sub { Data::GUID::Any::v1_guid_as_string() },
+  v4  => sub { Data::GUID::Any::v4_guid_as_string() },
+);
+
+my %using = (
+  any => sub { $Data::GUID::Any::Using_vX },
+  v1  => sub { $Data::GUID::Any::Using_v1 },
+  v4  => sub { $Data::GUID::Any::Using_v4 },
+);
+
 require_ok( "Data::GUID::Any" )
   or BAIL_OUT "require Data::GUID::Any failed";
 
-my @modules = (Data::GUID::Any::_preferred_modules(), $binary);
+for my $style ( qw/any v1 v4/ ) {
 
-while ( my $mod = shift @modules ) {
-  SKIP: {
-    if ( $mod eq $binary ) {
-      skip( "$mod not executable", 1) unless -x $mod;
-    }
-    else {
-      eval "require $mod; 1" or skip( "$mod not available", 1);
-    }
-    # reload Data::GUID::Any
-    delete $INC{'Data/GUID/Any.pm'};
-    {
-      local $SIG{__WARN__} = sub {};
-      eval { require Data::GUID::Any;1 };
-      is( $@ , "",
-        "reloaded Data::GUID::Any"
+  my @providers = map { $_->[0] } @{Data::GUID::Any::_generator_set($style)};
+  undef $Data::GUID::Any::NO_BINARY;
+  undef %hidden;
+
+  while ( my $mod = shift @providers )  {
+    SKIP: {
+      my $available;
+      {
+        local $SIG{__WARN__} = sub {};
+        $available = Data::GUID::Any::_is_available($mod);
+      }
+      skip( "$mod not available", 1) unless $available;
+      # reload Data::GUID::Any
+      delete $INC{'Data/GUID/Any.pm'};
+      {
+        local $SIG{__WARN__} = sub {};
+        eval { require Data::GUID::Any;1 };
+        is( $@ , "",
+          "reloaded Data::GUID::Any"
+        );
+      }
+      is( $using{$style}->(), $mod,
+        "$style: Data::GUID::Any set to use '$mod'"
       );
-    }
-    is( $Data::GUID::Any::Using, ($mod eq $binary ? 'uuid' : $mod), 
-      "Data::GUID::Any set to use '$mod'" 
-    );
-    # test getting a guid
-    can_ok( 'Data::GUID::Any', $_ ) for qw/ guid_as_string /;
-    my $guid =  Data::GUID::Any::guid_as_string();
-    ok( t::Util::looks_like_guid( $guid  ),
-      "guid_as_string() looks like guid"
-    ) or diag $guid;
-    # hide module before next loop
-    if ( $mod ne $binary) {
-      my $mod_path = $mod;
-      $mod_path =~ s{::}{/}g;
-      $mod_path .= ".pm";
-      $hidden{$mod_path} = delete $INC{$mod_path};
-      eval "require $mod; 1";
-      ok( $@, "$mod hidden" ) 
-        or diag "$mod_path";
-      undef $Data::GUID::Any::Using;
+      my $guid = $fcn{$style}->();
+      ok( t::Util::looks_like_guid( $guid  ),
+        "$style: got valid guid from '$mod'"
+      ) or diag $guid;
+      # hide binary or module before next loop
+      if ( $mod eq 'uuid') {
+        $Data::GUID::Any::NO_BINARY = 1;
+        pass 'uuid hidden';
+      }
+      else {
+        my $mod_path = $mod;
+        $mod_path =~ s{::}{/}g;
+        $mod_path .= ".pm";
+        $hidden{$mod_path} = delete $INC{$mod_path};
+        eval "require $mod; 1";
+        ok( $@, "$mod hidden" )
+          or diag "$mod_path";
+      }
     }
   }
 }
