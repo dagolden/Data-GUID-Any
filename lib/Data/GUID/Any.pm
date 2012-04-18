@@ -1,19 +1,13 @@
-# Copyright (c) 2009 by David Golden. All rights reserved.
-# Licensed under Apache License, Version 2.0 (the "License").
-# You may not use this file except in compliance with the License.
-# A copy of the License was distributed with this file or you may obtain a
-# copy of the License from http://www.apache.org/licenses/LICENSE-2.0
-
-package Data::GUID::Any;
 use 5.006;
 use strict;
 use warnings;
+package Data::GUID::Any;
+# ABSTRACT Generic interface for GUID creation
+# VERSION
+
 use Config;
 use File::Spec;
 use base 'Exporter';
-
-our $VERSION = '0.002';
-$VERSION = eval $VERSION; ## no critic
 
 our @EXPORT_OK = qw/ guid_as_string /;
 
@@ -66,7 +60,7 @@ my @modules = (
   ['UUID::Random' => sub { return uc UUID::Random::generate() }],
 );
 
-sub _preferred_modules { 
+sub _preferred_modules {
   return map { $_->[0] } @modules;
 }
 
@@ -101,90 +95,49 @@ die "Couldn't find a GUID module or binary" unless $bin_sub || $mod_sub;
 
 __END__
 
-=begin wikidoc
-
-= NAME
-
-Data::GUID::Any - Generic interface for GUID creation
-
-= VERSION
-
-This documentation describes version %%VERSION%%.
-
-= SYNOPSIS
+=head1 SYNOPSIS
 
     use Data::GUID::Any 'guid_as_string';
 
     my $guid = guid_as_string();
 
-= DESCRIPTION
+=head1 DESCRIPTION
 
-This module is a generic wrapper around various ways of obtaining 
+This module is a generic wrapper around various ways of obtaining
 Globally Unique ID's (GUID's).  It will use any of the following, listed
 from most preferred to least preferred:
 
-* [Data::GUID]
-* [Data::UUID]
-* [Data::UUID::LibUUID]
-* [UUID]
-* [Win32] (using GuidGen())
-* [UUID::Generator::PurePerl]
-* [APR::UUID] (random)
-* [UUID::Random] (random)
+=for :list
+* L<Data::GUID>
+* L<Data::UUID>
+* L<Data::UUID::LibUUID>
+* L<UUID>
+* L<Win32> (using GuidGen())
+* L<UUID::Generator::PurePerl>
+* L<APR::UUID> (random)
+* L<UUID::Random> (random)
 * uuid (external program)
 
-If none are available when Data::GUID::Any is installed, it will 
+If none are available when Data::GUID::Any is installed, it will
 add Data::GUID as a prerequisite.
 
-= USAGE
+=head1 USAGE
 
-== guid_as_string()
+=head2 guid_as_string()
 
     my $guid = guid_as_string();
 
-Returns a guid in string format with upper-case hex characters:  
+Returns a guid in string format with upper-case hex characters:
 
   FA2D5B34-23DB-11DE-B548-0018F34EC37C
 
 Except for modules that only produce random GUID's, these are 'version 1'
 GUID's.
 
-= BUGS
+=head1 SEE ALSO
 
-Please report any bugs or feature requests using the CPAN Request Tracker
-web interface at [http://rt.cpan.org/Dist/Display.html?Queue=Data-GUID-Any]
-
-When submitting a bug or request, please include a test-file or a patch to an
-existing test-file that illustrates the bug or desired feature.
-
-= SEE ALSO
-
+=for :list
 * RFC 4122 [http://tools.ietf.org/html/rfc4122]
-
-= AUTHOR
-
-David A. Golden (DAGOLDEN)
-
-= COPYRIGHT AND LICENSE
-
-Copyright (c) 2009 by David A. Golden. All rights reserved.
-
-Licensed under Apache License, Version 2.0 (the "License").
-You may not use this file except in compliance with the License.
-A copy of the License was distributed with this file or you may obtain a
-copy of the License from http://www.apache.org/licenses/LICENSE-2.0
-
-Files produced as output though the use of this software, shall not be
-considered Derivative Works, but shall be considered the original work of the
-Licensor.
-
-Unless required by applicable law or agreed to in writing, software
-distributed under the License is distributed on an "AS IS" BASIS,
-WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-See the License for the specific language governing permissions and
-limitations under the License.
-
-=end wikidoc
 
 =cut
 
