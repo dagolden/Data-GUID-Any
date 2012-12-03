@@ -23,6 +23,14 @@ On installation, if Data::GUID::Any can't detect a way of generating both
 version 1 and version 4 GUID's, it will add either Data::UUID::MT or UUID::Tiny
 as a prerequisite, depending on whether or not a compiler is available.
 
+For legacy compatibility with L<Data::UUID>, guid strings are returned uppercase,
+even though RFC 4122 specifies that generators should provide lower-case strings.
+To force lower case results from Data::GUID::Any, set C<$Data::GUID::Any::UC>
+to a false value.
+
+  local $Data::GUID::Any::UC;
+  guid_as_string(); # will be lower case
+
 =head1 USAGE
 
 The following functions are available for export.
