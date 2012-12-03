@@ -25,7 +25,7 @@ sub _looks_like_guid {
 
 #--------------------------------------------------------------------------#
 
-sub xc {
+sub _xc {
   return $UC ? uc($_[0]) : lc($_[0]);
 }
 
@@ -40,56 +40,56 @@ my %generators = (
     type => 'module',
     v1 => sub {
       $dumt_v1 ||= Data::UUID::MT->new(version => 1);
-      return xc( $dumt_v1->create_string );
+      return _xc( $dumt_v1->create_string );
     },
     v4 => sub {
       $dumt_v4 ||= Data::UUID::MT->new(version => 4);
-      return xc( $dumt_v4->create_string );
+      return _xc( $dumt_v4->create_string );
     },
   },
   'Data::UUID::LibUUID' => {
     type => 'module',
-    v1 => sub { return xc( Data::UUID::LibUUID::new_uuid_string(2) ) },
-    v4 => sub { return xc( Data::UUID::LibUUID::new_uuid_string(4) ) },
-    vX => sub { return xc( Data::UUID::LibUUID::new_uuid_string() ) },
+    v1 => sub { return _xc( Data::UUID::LibUUID::new_uuid_string(2) ) },
+    v4 => sub { return _xc( Data::UUID::LibUUID::new_uuid_string(4) ) },
+    vX => sub { return _xc( Data::UUID::LibUUID::new_uuid_string() ) },
   },
   'UUID::Tiny' => {
     type => 'module',
-    v1 => sub { return xc( UUID::Tiny::create_UUID_as_string(UUID::Tiny::UUID_V1()) ) },
-    v4 => sub { return xc( UUID::Tiny::create_UUID_as_string(UUID::Tiny::UUID_V4()) ) },
+    v1 => sub { return _xc( UUID::Tiny::create_UUID_as_string(UUID::Tiny::UUID_V1()) ) },
+    v4 => sub { return _xc( UUID::Tiny::create_UUID_as_string(UUID::Tiny::UUID_V4()) ) },
   },
   'uuid' => {
     type => 'binary',
     v1 => sub {
       $uuid_v1 ||= IPC::Cmd::can_run('uuid');
-      chomp( my $guid = qx/$uuid_v1 -v1/ ); return xc( $guid );
+      chomp( my $guid = qx/$uuid_v1 -v1/ ); return _xc( $guid );
     },
     v4 => sub {
       $uuid_v4 ||= IPC::Cmd::can_run('uuid');
-      chomp( my $guid = qx/$uuid_v4 -v4/ ); return xc( $guid );
+      chomp( my $guid = qx/$uuid_v4 -v4/ ); return _xc( $guid );
     },
   },
   # v1 only
   'Data::GUID' => {
     type => 'module',
-    v1 => sub { return xc( Data::GUID->new->as_string ) },
+    v1 => sub { return _xc( Data::GUID->new->as_string ) },
   },
   'Data::UUID' => {
     type => 'module',
-    v1 => sub { return xc( Data::UUID->new->create_str ) },
+    v1 => sub { return _xc( Data::UUID->new->create_str ) },
   },
   # system dependent or custom
   'UUID' => {
     type => 'module',
-    vX => sub { my ($u,$s); UUID::generate($u); UUID::unparse($u, $s); return xc( $s ) },
+    vX => sub { my ($u,$s); UUID::generate($u); UUID::unparse($u, $s); return _xc( $s ) },
   },
   'Win32' => {
     type => 'module',
-    vX => sub { my $guid = Win32::GuidGen(); return xc( substr($guid,1,-1) ) },
+    vX => sub { my $guid = Win32::GuidGen(); return _xc( substr($guid,1,-1) ) },
   },
   'APR::UUID' => {
     type => 'module',
-    vX => sub { return xc( APR::UUID->new->format ) },
+    vX => sub { return _xc( APR::UUID->new->format ) },
   },
 );
 
