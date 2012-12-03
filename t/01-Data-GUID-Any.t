@@ -76,9 +76,16 @@ for my $style ( qw/any v1 v4/ ) {
         "$style: Data::GUID::Any set to use '$mod'"
       );
       my $guid = $fcn{$style}->();
-      ok( t::Util::looks_like_guid( $guid  ),
+      ok( t::Util::looks_like_uc_guid( $guid  ),
         "$style: got valid guid from '$mod'"
       ) or diag $guid;
+      {
+        local $Data::GUID::Any::UC;
+        $guid = $fcn{$style}->();
+        ok( t::Util::looks_like_lc_guid( $guid  ),
+          "$style: got valid lc guid from '$mod' (\$UC=0)"
+        ) or diag $guid;
+      }
       # hide binary or module before next loop
       if ( $mod eq 'uuid') {
         $Data::GUID::Any::NO_BINARY = 1;
