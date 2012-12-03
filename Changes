@@ -2,6 +2,8 @@ Revision history for Data-GUID-Any
 
 {{$NEXT}}
 
+0.004     2012-12-03 11:59:00 America/New_York
+
     - Documented that uppercase strings are not compliant with RFC 4122
 
     - Added $Data::GUID::Any::UC variable that can be set false to get
