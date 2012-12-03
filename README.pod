@@ -6,7 +6,7 @@ Data::GUID::Any - Generic interface for GUID/UUID creation
 
 =head1 VERSION
 
-version 0.003
+version 0.004
 
 =head1 SYNOPSIS
 
@@ -172,7 +172,7 @@ RFC 4122 [http://tools.ietf.org/html/rfc4122]
 =head2 Bugs / Feature Requests
 
 Please report any bugs or feature requests through the issue tracker
-at L<http://rt.cpan.org/Public/Dist/Display.html?Name=Data-GUID-Any>.
+at L<https://rt.cpan.org/Public/Dist/Display.html?Name=Data-GUID-Any>.
 You will be notified automatically of any progress on your issue.
 
 =head2 Source Code
@@ -182,7 +182,7 @@ public review and contribution under the terms of the license.
 
 L<https://github.com/dagolden/data-guid-any>
 
-  git clone https://github.com/dagolden/data-guid-any.git
+  git clone git://github.com/dagolden/data-guid-any.git
 
 =head1 AUTHOR
 
