@@ -1,4 +1,4 @@
-package t::Util;
+package TestUtil;
 use strict;
 use warnings;
 use Exporter;
