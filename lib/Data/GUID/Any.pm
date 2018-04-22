@@ -4,7 +4,7 @@ use warnings;
 package Data::GUID::Any;
 # ABSTRACT: Generic interface for GUID/UUID creation
 
-our $VERSION = '0.005';
+our $VERSION = '0.006';
 
 use IPC::Cmd;
 use Exporter;
